@@ -1,1 +1,354 @@
-<h1>Github pages </h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Señaléticas App Móvil</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <style>
+        /* ESTILOS GENERALES */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 10px; background-color: #f0f4f8; color: #333; margin: 0; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); box-sizing: border-box; }
+        h1 { color: #1a5a37; text-align: center; font-size: 2em; margin-bottom: 20px; text-transform: uppercase; }
+        h2 { background: #2c3e50; color: white; padding: 12px; border-radius: 6px; margin-top: 30px; font-size: 1.2em; }
+        h3 { color: #d35400; border-left: 5px solid #d35400; padding-left: 10px; margin-top: 20px; font-size: 1.1em; }
+        
+        .row-item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 15px 10px; border-bottom: 1px solid #e0e0e0; gap: 10px; transition: background 0.2s; }
+        .row-item:hover { background-color: #f9f9f9; }
+        .item-name { flex: 1 1 300px; font-weight: bold; color: #2c3e50; }
+        
+        .controls { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        .control-group { display: flex; align-items: center; gap: 8px; }
+        label { font-size: 0.9em; font-weight: bold; color: #666; }
+        
+        select, input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        select:focus, input:focus { border-color: #1a5a37; outline: none; box-shadow: 0 0 5px rgba(26,90,55,0.3); }
+        
+        .input-oculto { display: none; border: 2px solid #1a5a37; width: 100%; max-width: 200px; }
+        
+        .tech-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 15px; padding: 15px 10px; border-bottom: 1px solid #eee; align-items: center; }
+        .tech-header { font-weight: bold; background: #e0e0e0; border-radius: 5px; }
+        .tech-grid input { width: 100%; box-sizing: border-box; }
+
+        .btn-exportar { 
+            position: sticky; bottom: 10px; display: block; width: 100%; padding: 18px; 
+            margin-top: 40px; background-color: #217346; color: white; border: none; 
+            border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(33, 115, 70, 0.4); z-index: 1000;
+        }
+        .btn-exportar:hover { background-color: #165030; }
+
+        /* =======================================================
+           ADAPTACIÓN MÓVIL (CORREGIDA)
+           ======================================================= */
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .container { padding: 15px; border-radius: 8px; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.1em; text-align: center; }
+            
+            .row-item { flex-direction: column; align-items: flex-start; padding: 15px 5px; }
+            
+            /* SOLUCIÓN AL ESPACIO GIGANTE EN ANDROID (flex: none;) */
+            .item-name { 
+                flex: none; 
+                width: 100%; 
+                border-bottom: 2px solid #eee; 
+                padding-bottom: 8px; 
+                margin-bottom: 8px; 
+                font-size: 1.1em; 
+                color: #1a5a37; 
+            }
+            
+            .controls { width: 100%; flex-direction: column; gap: 10px; align-items: stretch; }
+            .control-group { flex-direction: column; align-items: flex-start; width: 100%; gap: 5px; }
+            .control-group select, .control-group input, .input-oculto { width: 100%; max-width: none; }
+            
+            .tech-header { display: none; } 
+            .tech-grid { 
+                grid-template-columns: 1fr 1fr; 
+                grid-template-areas: 
+                    "titulo titulo"
+                    "caras caras"
+                    "ancho alto";
+                gap: 10px;
+                background: #fdfdfd;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                padding: 15px;
+            }
+            .tech-grid > div:nth-child(1) { grid-area: titulo; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; color: #1a5a37; font-size: 1.1em; }
+            .tech-grid > div:nth-child(2) { grid-area: caras; }
+            .tech-grid > div:nth-child(3) { grid-area: ancho; }
+            .tech-grid > div:nth-child(4) { grid-area: alto; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Señaléticas</h1>
+
+    <div id="sec-basicas"></div>
+
+    <h2>PROHIBITIVOS DE PARED – GENERALES</h2>
+    <div id="sec-prohibitivos"></div>
+
+    <h2>COMPLEMENTARIAS</h2>
+    <div id="sec-complementarias"></div>
+
+    <h2>JAULA GLP</h2>
+    <div id="sec-jaula"></div>
+
+    <h2>ESPECIALES</h2>
+    <div id="sec-especiales"></div>
+
+    <h2>CUADRO DE INTERVENCIÓN ESTRUCTURAL</h2>
+    <h3>INTERVENCIÓN</h3>
+    <div id="sec-intervencion"></div>
+
+    <h2>DETALLE TÉCNICO DE INTERVENCIÓN</h2>
+    
+    <h3>TÓTEM</h3>
+    <div class="tech-grid tech-header"><div>Ítem</div><div>Caras</div><div>Ancho</div><div>Alto</div></div>
+    <div id="sec-totem"></div>
+
+    <h3>CANOPY LOGO Y TRAMA</h3>
+    <div class="tech-grid tech-header"><div>Ítem</div><div>-</div><div>Ancho</div><div>Alto</div></div>
+    <div id="sec-canopy"></div>
+
+    <h3>SPREADERS</h3>
+    <div class="tech-grid tech-header"><div>Ítem</div><div>-</div><div>Ancho</div><div>Alto</div></div>
+    <div id="sec-spreaders"></div>
+
+    <button class="btn-exportar" onclick="generarExcel()">📥 EXPORTAR A EXCEL</button>
+</div>
+
+<script>
+    const data = {
+        basicas: [ { n: "Agua", m: "90 x 60 cm" }, { n: "Aire", m: "90 x 60 cm" }, { n: "Aire / Agua", m: "90 x 60 cm" } ],
+        prohibitivos: [
+            { n: "Prohibida la venta ambulatoria a menos de 20 mt", m: "90 x 60 cm" },
+            { n: "Prohibido estacionarse las 24 horas", m: "90 x 60 cm" },
+            { n: "Prohibido hacer fuego abierto a menos de 50 mts", m: "90 x 60 cm" },
+            { n: "Prohibido abastecimiento a vehículos de carga y/o autobuses", m: "90 x 60 cm" },
+            { n: "Prohibido el abastecimiento de combustible a vehículos de transporte público con pasajeros en su interior", m: "90 x 60 cm" },
+            { n: "Prohibido el uso de todo tipo de lámpara de mano a base de combustibles y eléctricos que no sean apropiados para atmósferas de gas inflamable", m: "90 x 60 cm" },
+            { n: "Prohibida la circulación de vehículos de combustión interna cuyos tubos de escape estén perforados o deteriorados o desprovistos de matachispas o silenciadores", m: "90 x 60 cm" },
+            { n: "Precaución gas combustible a alta presión", m: "90 x 60 cm" },
+            { n: "Prohibido estacionarse las 24 horas", m: "90 x 60 cm" }, 
+            { n: "Prohibido el abastecimiento a vehículos de carga y/o autobuses con pasajeros", m: "90 x 60 cm" },
+            { n: "Prohibido el comercio ambulatorio", m: "90 x 60 cm" },
+            { n: "Gas inflamable. Apague su motor. Apague su celular. No fumar", m: "90 x 60 cm" },
+            { n: "Peligro GNV (Gas Natural Vehicular Inflamable)", m: "90 x 60 cm" }
+        ],
+        complementarias: [
+            { n: "Zona videovigilada grabación las 24 horas", m: "90 x 60 cm" },
+            { n: "USA SIEMPRE LOS CINTURONES DE SEGURIDAD", m: "90 x 60 cm" },
+            { n: "La empresa no se responsabiliza por pérdida o robo durante su permanencia en el local", m: "90 x 60 cm" }
+        ],
+        jaula: [
+            { n: "Gas combustible no fumar", m: "90 x 60 cm" },
+            { n: "Gas inflamable. Apague su motor. Apague su celular. No fumar", m: "90 x 60 cm" },
+            { n: "Rombo NFPA", m: "40 x 40 cm" },
+            { n: "Rombo Gas Inflamable", m: "40 x 40 cm" },
+            { n: "Utilice el pozo a tierra para la descarga de combustible (con icono)", m: "40 x 30 cm" },
+            { n: "Utilice el pozo a tierra para la descarga de combustible (sin icono)", m: "35 x 25 cm" },
+            { n: "Placa UN 1075", m: "30 x 12 cm" }
+        ],
+        especiales: [
+            { n: "Prohibitivo de col. GNV", m: "18 x 47 cm" }, { n: "Prohibitivo de columna", m: "18 x 47 cm" },
+            { n: "Libro de reclamaciones", m: "30 x 20 cm" }, { n: "Solo aceptamos billetes de 50 dólares", m: "40 x 15 cm" },
+            { n: "Interruptor general", m: "30 x 20 cm" }, { n: "Tipo de cambio", m: "25 x 20 cm" },
+            { n: "Pulsador de emergencia", m: "20 x 30 cm" }, { n: "Accionador de shutt-off", m: "20 x 30 cm" },
+            { n: "Riesgo eléctrico", m: "20 x 30 cm" }, { n: "Prohibido el pase a personas no autorizadas", m: "20 x 30 cm" },
+            { n: "Extintor", m: "20 x 30 cm" }, { n: "Tabla de equivalencia", m: "30 x 20 cm" },
+            { n: "Baño dama", m: "20 x 30 cm" }, { n: "Baño caballero", m: "20 x 30 cm" },
+            { n: "Baño discapacitado", m: "20 x 30 cm" }, { n: "Baño unisex", m: "20 x 30 cm" },
+            { n: "Pulsador de emergencia CoLi", m: "18 x 15 cm" }, { n: "Pulsador de emergencia GLP", m: "18 x 15 cm" },
+            { n: "Pulsador de emergencia GLP CoLi", m: "18 x 15 cm" }, { n: "Pulsador de emergencia GNV", m: "18 x 15 cm" },
+            { n: "Prohibido llenar más del 80% de la capacidad del tanque", m: "18 x 15 cm" },
+            { n: "Nuestras cámaras lo están filmando", m: "18 x 15 cm" },
+            { n: "Si has ingerido bebidas alcohólicas no manejes", m: "18 x 15 cm" },
+            { n: "Pulsador de emergencias", m: "18 x 15 cm" }
+        ],
+        intervencion: ["Tótem", "Canopy", "Spreaders"],
+        totem: ["Cabezal", "Pastillas"],
+        canopy: ["Frontal principal", "Trama PECSA"],
+        spreaders: ["Frontal", "Posterior", "Superior", "Base", "Lateral izquierdo", "Lateral derecho"]
+    };
+
+    /* Optimizado para navegadores estrictos */
+    function renderNormal(lista, contenedorId, seccionNombre) {
+        let htmlContent = "";
+        lista.forEach(item => {
+            htmlContent += `
+                <div class="row-item item-normal" data-sec="${seccionNombre}" data-item="${item.n}">
+                    <div class="item-name">${item.n}</div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Medida:</label>
+                            <select class="sel-medida" onchange="verificarMedida(this)">
+                                <option value="${item.m}">${item.m}</option>
+                                <option value="NO">NO</option>
+                            </select>
+                            <input type="text" class="input-oculto inp-medida" placeholder="Ingresar medida manual">
+                        </div>
+                        <div class="control-group">
+                            <label>¿Montado en Celtex?</label>
+                            <select class="sel-celtex"><option value="SI">SI</option><option value="NO">NO</option></select>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        document.getElementById(contenedorId).innerHTML = htmlContent;
+    }
+
+    function renderEspeciales() {
+        let htmlContent = "";
+        data.especiales.forEach(item => {
+            htmlContent += `
+                <div class="row-item item-especial" data-sec="ESPECIALES" data-item="${item.n}">
+                    <div class="item-name">${item.n}</div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Medida:</label>
+                            <select class="sel-medida" onchange="verificarMedida(this)">
+                                <option value="${item.m}">${item.m}</option>
+                                <option value="NO">NO</option>
+                            </select>
+                            <input type="text" class="input-oculto inp-medida" placeholder="Ingresar medida manual">
+                        </div>
+                        <div class="control-group">
+                            <label>Base:</label>
+                            <select class="sel-base">
+                                <option value="CEL">CEL</option>
+                                <option value="SV">SV</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Ubicación:</label>
+                            <select class="sel-ubi" onchange="verificarUbicacion(this)">
+                                <option value="PAR">PAR</option>
+                                <option value="MUE">MUE</option>
+                                <option value="COL">COL</option>
+                            </select>
+                            <input type="text" class="input-oculto inp-ubi" placeholder="¿Circular o Rectangular?">
+                        </div>
+                    </div>
+                </div>`;
+        });
+        document.getElementById('sec-especiales').innerHTML = htmlContent;
+    }
+
+    function renderIntervencion() {
+        let htmlContent = "";
+        data.intervencion.forEach(item => {
+            htmlContent += `
+                <div class="row-item item-intervencion" data-sec="INTERVENCIÓN" data-item="${item}">
+                    <div class="item-name">${item}</div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label>Intervención:</label>
+                            <select class="sel-sino"><option value="SI">SI</option><option value="NO">NO</option></select>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        document.getElementById('sec-intervencion').innerHTML = htmlContent;
+    }
+
+    function renderTecnico(lista, contenedorId, seccionNombre, llevaCaras) {
+        let htmlContent = "";
+        lista.forEach(item => {
+            let carasHtml = llevaCaras ? `<input type="text" class="inp-caras" placeholder="Caras">` : `<span style="display:none;"></span>`;
+            htmlContent += `
+                <div class="tech-grid item-tecnico" data-sec="${seccionNombre}" data-item="${item}">
+                    <div class="item-name">${item}</div>
+                    <div>${carasHtml}</div>
+                    <div><input type="text" class="inp-ancho" placeholder="Ancho (Ej: 100cm)"></div>
+                    <div><input type="text" class="inp-alto" placeholder="Alto (Ej: 50cm)"></div>
+                </div>`;
+        });
+        document.getElementById(contenedorId).innerHTML = htmlContent;
+    }
+
+    renderNormal(data.basicas, 'sec-basicas', 'BÁSICAS');
+    renderNormal(data.prohibitivos, 'sec-prohibitivos', 'PROHIBITIVOS DE PARED');
+    renderNormal(data.complementarias, 'sec-complementarias', 'COMPLEMENTARIAS');
+    renderNormal(data.jaula, 'sec-jaula', 'JAULA GLP');
+    renderEspeciales();
+    renderIntervencion();
+    renderTecnico(data.totem, 'sec-totem', 'DETALLE TÉCNICO - TÓTEM', true);
+    renderTecnico(data.canopy, 'sec-canopy', 'DETALLE TÉCNICO - CANOPY', false);
+    renderTecnico(data.spreaders, 'sec-spreaders', 'DETALLE TÉCNICO - SPREADERS', false);
+
+    function verificarMedida(select) {
+        const input = select.nextElementSibling;
+        input.style.display = (select.value === "NO") ? "block" : "none";
+    }
+
+    function verificarUbicacion(select) {
+        const input = select.nextElementSibling;
+        input.style.display = (select.value === "COL") ? "block" : "none";
+    }
+
+    function generarExcel() {
+        let datosFinales = [];
+
+        document.querySelectorAll('.item-normal').forEach(el => {
+            const valSelect = el.querySelector('.sel-medida').value;
+            datosFinales.push({
+                "SECCIÓN": el.dataset.sec,
+                "ÍTEM": el.dataset.item,
+                "MEDIDA": valSelect === "NO" ? el.querySelector('.inp-medida').value : valSelect,
+                "MONTAJE / BASE": el.querySelector('.sel-celtex').value,
+                "UBICACIÓN / TIPO": "-", "CARAS": "-", "ANCHO": "-", "ALTO": "-"
+            });
+        });
+
+        document.querySelectorAll('.item-especial').forEach(el => {
+            const vMedidaSel = el.querySelector('.sel-medida').value;
+            const vUbiSel = el.querySelector('.sel-ubi').value;
+            datosFinales.push({
+                "SECCIÓN": el.dataset.sec,
+                "ÍTEM": el.dataset.item,
+                "MEDIDA": vMedidaSel === "NO" ? el.querySelector('.inp-medida').value : vMedidaSel,
+                "MONTAJE / BASE": el.querySelector('.sel-base').value,
+                "UBICACIÓN / TIPO": vUbiSel === "COL" ? `COL (${el.querySelector('.inp-ubi').value})` : vUbiSel,
+                "CARAS": "-", "ANCHO": "-", "ALTO": "-"
+            });
+        });
+
+        document.querySelectorAll('.item-intervencion').forEach(el => {
+            datosFinales.push({
+                "SECCIÓN": el.dataset.sec,
+                "ÍTEM": el.dataset.item,
+                "MEDIDA": "-", "MONTAJE / BASE": "-", 
+                "UBICACIÓN / TIPO": "Opción: " + el.querySelector('.sel-sino').value,
+                "CARAS": "-", "ANCHO": "-", "ALTO": "-"
+            });
+        });
+
+        document.querySelectorAll('.item-tecnico').forEach(el => {
+            const inputCaras = el.querySelector('.inp-caras');
+            datosFinales.push({
+                "SECCIÓN": el.dataset.sec,
+                "ÍTEM": el.dataset.item,
+                "MEDIDA": "-", "MONTAJE / BASE": "-", "UBICACIÓN / TIPO": "-",
+                "CARAS": inputCaras ? inputCaras.value : "N/A",
+                "ANCHO": el.querySelector('.inp-ancho').value,
+                "ALTO": el.querySelector('.inp-alto').value
+            });
+        });
+
+        const hoja = XLSX.utils.json_to_sheet(datosFinales);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Reporte Final");
+        XLSX.writeFile(libro, "Reporte_Señaleticas_Mobile.xlsx");
+    }
+</script>
+
+</body>
+</html>
